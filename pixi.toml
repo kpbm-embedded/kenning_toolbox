@@ -20,3 +20,30 @@ kenning = { git = "https://github.com/antmicro/kenning", rev = "ae35386b15104ede
 # `kenning fine-tune-optimizers` always calls compute_detection_metrics, which imports cv2 even for
 # classification (upstream main@ae35386b): headless OpenCV instead of the whole object_detection extra.
 opencv-python-headless = "*"
+# kenning-zephyr-runtime's build_tflite.py (TFLite Micro op resolver header) renders a jinja2 template
+# (Kenning lists it only under the `reports` extra).
+jinja2 = "*"
+
+# ---- optional environments (not installed by bootstrap/install; ./kenning-box extra install <env>) ----
+# automl: Kenning's AutoML flow (AutoPyTorchML = Antmicro's AutoPyTorch fork on SMAC3 1.4 with Hyperband
+# budgets), the same engine as ADI/Antmicro's automl-embedded VS Code plugin. CPU-only torch from the
+# PyTorch CPU index (no CUDA wheels). Kenning's extras pin torch==2.13.0.
+[feature.automl.pypi-dependencies]
+kenning = { git = "https://github.com/antmicro/kenning", rev = "ae35386b15104edeae03972670b4901072d7028c", extras = ["tensorflow", "tflite", "tvm", "onnxruntime", "uart", "renode", "iree", "auto_pytorch", "anomaly_detection"] }
+torch = { version = "==2.13.0", index = "https://download.pytorch.org/whl/cpu" }
+torchvision = { version = "==0.28.0", index = "https://download.pytorch.org/whl/cpu" }
+autoPyTorch = { git = "https://github.com/antmicro/auto-pytorch.git", rev = "1fbf8753015416c650694069faaf3043a9428fda" }
+smac = { git = "https://github.com/antmicro/smac3.git", rev = "12afbffc51580ca7cb53297d955c5c02c1a3d985" }
+
+# autogluon: host-side AutoML baseline (AutoGluon TabularPredictor, CPU-only, no torch models).
+# AutoGluon models cannot be exported to TFLite/microTVM: never deployable to an MCU.
+[feature.autogluon]
+dependencies = { python = "3.12.*", pip = "*" }
+[feature.autogluon.pypi-dependencies]
+"autogluon.tabular" = { version = "==1.6.3", extras = ["lightgbm", "xgboost"] }
+numpy = "*"
+pandas = "*"
+
+[environments]
+automl = { features = ["automl"], solve-group = "automl" }
+autogluon = { features = ["autogluon"], no-default-feature = true }

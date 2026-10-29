@@ -1,0 +1,21 @@
+{
+    "platform": {
+        "type": "ZephyrPlatform",
+        "parameters": {"name": "stm32f746g_disco", "simulated": true, "disable_profiler": true, "zephyr_build_path": "@OUT@/fw"}
+    },
+    "model_wrapper": {
+        "type": "kenning.modelwrappers.classification.tflite_magic_wand.MagicWandModelWrapper",
+        "parameters": {"model_path": "kenning:///models/classification/magic_wand.h5"}
+    },
+    "dataset": {
+        "type": "kenning.datasets.magic_wand_dataset.MagicWandDataset",
+        "parameters": {"dataset_root": "@DATASET@", "download_dataset": true}
+    },
+    "optimizers": [
+        {
+            "type": "kenning.optimizers.tflite.TFLiteCompiler",
+            "parameters": {"target": "default", "compiled_model_path": "@OUT@/magic_wand_fp32.tflite",
+                           "inferenceinputtype": "float32", "inferenceoutputtype": "float32"}
+        }
+    ]
+}

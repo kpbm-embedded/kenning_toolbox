@@ -1,0 +1,43 @@
+{
+    "platform": {
+        "type": "ZephyrPlatform",
+        "parameters": {
+            "name": "stm32f746g_disco",
+            "simulated": true,
+            "disable_profiler": true,
+            "zephyr_build_path": "./build/fw"
+        }
+    },
+    "model_wrapper": {
+        "type": "kenning.modelwrappers.classification.tflite_magic_wand.MagicWandModelWrapper",
+        "parameters": {
+            "model_path": "kenning:///models/classification/magic_wand.h5"
+        }
+    },
+    "dataset": {
+        "type": "kenning.datasets.magic_wand_dataset.MagicWandDataset",
+        "parameters": {
+            "dataset_root": "./build/MagicWandDataset",
+            "download_dataset": true
+        }
+    },
+    "optimizers": [
+        {
+            "type": "kenning.optimizers.tflite.TFLiteCompiler",
+            "parameters": {
+                "target": "default",
+                "compiled_model_path": "./build/@NAME@.tflite"
+            }
+        },
+        {
+            "type": "kenning.optimizers.tvm.TVMCompiler",
+            "parameters": {
+                "target": "zephyr",
+                "target_microtvm_board": "stm32f746g_disco",
+                "module_name": "",
+                "compiled_model_path": "./build/model/model.graph_data",
+                "zephyr_header_template": "@KZR@/lib/kenning_inference_lib/runtimes/tvm/generated/model_impl.h.template"
+            }
+        }
+    ]
+}

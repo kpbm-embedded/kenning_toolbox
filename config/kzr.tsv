@@ -1,0 +1,12 @@
+# kenning-zephyr-runtime workspace for `./kenning-box kzr setup` (tab separated). Checked 2026-10-29.
+# Each source is fetched shallow at the pinned commit into install/kzr/<name> and the checkout is verified
+# against the commit hash. Zephyr itself is NOT here: it comes from 32_03_zephyr (BOX_ZEPHYR), used read-only.
+# kzr upstream west.yml pins zephyr v4.3.0 + tflite-micro zephyr-v4.1.0; 32_03 has Zephyr v4.4.2, whose
+# tflite-micro glue (zephyr/modules/tflite-micro) needs the matching zephyr-v4.4.0 branch.
+# executorch, zephelin, emlearn and ai8x are not fetched (no example uses them).
+# name	commit	ref	url	submodules
+kenning-zephyr-runtime	8c88481457180af516a0e6c7f45d71b90073c84b	main (2026-09-30)	https://github.com/antmicro/kenning-zephyr-runtime	-
+tflite-micro	fcc760af130f3a595b5802cdebcc77461e54f382	zephyr-v4.4.0	https://github.com/zephyrproject-rtos/tflite-micro	-
+tvm	22a9d388d441dbfd917d032564e2a1bccacd5f8c	v0.18.0	https://github.com/apache/tvm	-
+dlpack	94485e23519bc30e22a18397a9c8ff1ea6b2b81e	main (2026-10-29)	https://github.com/dmlc/dlpack	-
+iree	e4a3b0405d7d23554da26403658d0e8c3c5ecf25	v3.11.0	https://github.com/iree-org/iree	third_party/flatcc,third_party/printf

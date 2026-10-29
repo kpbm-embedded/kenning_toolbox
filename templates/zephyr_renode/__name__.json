@@ -2,9 +2,10 @@
     "platform": {
         "type": "ZephyrPlatform",
         "parameters": {
-            "name": "nrf52840dk/nrf52840",
+            "name": "stm32f746g_disco",
             "simulated": true,
-            "runtime_binary_path": "./runtime/zephyr.elf"
+            "disable_profiler": true,
+            "zephyr_build_path": "./build/fw"
         }
     },
     "model_wrapper": {
@@ -24,24 +25,11 @@
         {
             "type": "kenning.optimizers.tflite.TFLiteCompiler",
             "parameters": {
-                "target": "int8",
+                "target": "default",
                 "compiled_model_path": "./build/@NAME@.tflite",
-                "inferenceinputtype": "int8",
-                "inferenceoutputtype": "int8"
+                "inferenceinputtype": "float32",
+                "inferenceoutputtype": "float32"
             }
         }
-    ],
-    "runtime": {
-        "type": "kenning.runtimes.tflite.TFLiteRuntime",
-        "parameters": {
-            "save_model_path": "./build/@NAME@.tflite"
-        }
-    },
-    "protocol": {
-        "type": "UARTProtocol",
-        "parameters": {
-            "port": "/tmp/uart",
-            "baudrate": 115200
-        }
-    }
+    ]
 }

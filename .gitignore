@@ -22,4 +22,10 @@ measurements*.json
 *.h5
 *.so
 *.o
+*.pth
+*.npz
+*.graph_data
+*.elf
+*.hex
+*.repl
 /templates/*/build/

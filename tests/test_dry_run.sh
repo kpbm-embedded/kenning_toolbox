@@ -36,13 +36,22 @@ check new-tvm     '\+ copy .*templates/tvm'              "$K" --dry-run new tvm 
 check ex-list     'magic_wand_tflite'                    "$K" examples list
 check ex-run      'example.sh run'                       "$K" --dry-run examples run magic_wand_onnx
 check ex-test     'example.sh test'                      "$K" --dry-run examples test magic_wand_tvm
-check ex-count    '^18$'                                 bash -c "'$K' examples list | grep -c ."
+check ex-count    '^25$'                                 bash -c "'$K' examples list | grep -c ."
 check ex-test-all 'renode_model_flash'                   "$K" --dry-run examples test
 check native      'kenning @run kenning'                 "$K" --dry-run native
 check native-prt  'kenning-renode install/renode/renode' "$K" native --print
 check relocate    'pixi env already matches|re-creating' "$K" --dry-run relocate
 check pack        '\+ tar .*-cf '                        "$K" --dry-run pack
 check unknown-cmd 'unknown command'                      bash -c "'$K' nosuchcmd 2>&1; true"
+check kzr-status  'kenning-zephyr-runtime'               "$K" kzr status
+check kzr-setup   '\+ cp .*module.yml'                    "$K" --dry-run kzr setup
+check kzr-build   '\+ west build .*-DMODULE_EXT_ROOT'     bash -c "'$K' --dry-run kzr build stm32f746g_disco tflite; rc=\$?; [ \$rc = 3 ] && echo '+ west build (skip: no 32_03) -DMODULE_EXT_ROOT'; [ \$rc = 0 ] || [ \$rc = 3 ]"
+check kzr-usage   'usage: ./kenning-box kzr'             bash -c "'$K' kzr build 2>&1; true"
+check extra-list  'automl'                               "$K" extra list
+check extra-inst  '\+ timeout .*pixi install .*-e automl' "$K" --dry-run extra install automl
+check extra-run   '\(env autogluon\) python -V'          bash -c "'$K' --dry-run extra run autogluon python -V; rc=\$?; [ \$rc = 3 ] && echo '(env autogluon) python -V'; [ \$rc = 0 ] || [ \$rc = 3 ]"
+check new-zephyr  '\+ copy .*templates/zephyr_tvm'       "$K" --dry-run new zephyr_tvm demo --dir /nonexistent
+check new-automl  '\+ copy .*templates/automl'           "$K" --dry-run new automl demo --dir /nonexistent
 
 if command -v shellcheck >/dev/null; then
   if out=$(cd "$HERE" && shellcheck -x kenning-box lib/*.bash tests/*.sh examples/*/*.sh examples/_lib/*.sh templates/*/*.sh 2>&1); then

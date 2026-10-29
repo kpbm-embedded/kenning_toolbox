@@ -1,0 +1,33 @@
+{
+    "platform": {
+        "type": "ZephyrPlatform",
+        "parameters": {
+            "name": "b_u585i_iot02a",
+            "simulated": true,
+            "disable_profiler": true,
+            "zephyr_build_path": "./build/fw"
+        }
+    },
+    "model_wrapper": {
+        "type": "kenning.modelwrappers.classification.tflite_magic_wand.MagicWandModelWrapper",
+        "parameters": {
+            "model_path": "kenning:///models/classification/magic_wand.h5"
+        }
+    },
+    "dataset": {
+        "type": "kenning.datasets.magic_wand_dataset.MagicWandDataset",
+        "parameters": {
+            "dataset_root": "./build/MagicWandDataset",
+            "download_dataset": true
+        }
+    },
+    "optimizers": [
+        {
+            "type": "kenning.optimizers.iree.IREECompiler",
+            "parameters": {
+                "backend": "vmvx",
+                "compiled_model_path": "./build/@NAME@.vmfb"
+            }
+        }
+    ]
+}

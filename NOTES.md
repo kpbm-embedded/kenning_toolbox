@@ -49,3 +49,35 @@
 - `.gitignore` made strict (model files, logs, bytecode). `git init -b main`, one commit.
 - Results: doctor 18 ok / 0 warn; examples test 18/18 (9 min on the loaded machine); test_smoke.sh 33/33 (14 `new` +
   14 template runs); test_dry_run.sh 33/33 (shellcheck clean).
+
+## 2026-10-29: kenning-zephyr-runtime in Renode, AutoML, AutoGluon (7 examples, 4 templates)
+
+- User requests: AutoML for Embedded (ADI + Antmicro, automl-embedded), kenning-zephyr-runtime with 32_03_zephyr,
+  AutoGluon as an optional host baseline.
+- kzr: new commands `kzr setup|build|status`; pins in `config/kzr.tsv` (kzr main @ 8c884814, tflite-micro zephyr-v4.4.0,
+  TVM v0.18.0, dlpack, IREE v3.11.0), fetched shallow into `install/kzr`, commit-checked. Zephyr 4.4.2 + SDK 1.0.1 from
+  32_03 (BOX_ZEPHYR or sibling, exit 3 without), nothing copied or changed there: module glue through
+  `MODULE_EXT_ROOT` + `ZEPHYR_EXTRA_MODULES` instead of kzr's prepare_modules.sh. Renode: 32_06's (same 1.17.0) when present.
+- Problems found: tflite-micro zephyr-v4.1.0 (kzr's pin) fails with Zephyr 4.4 (`decode.cc` missing) -> zephyr-v4.4.0
+  branch. `build_tflite.py` needs jinja2 (added to the default env). TVM's `crt_config.h` only reachable through
+  zephyr/modules upstream -> copied into the fetched TVM tree. Keras -> microTVM refused on Python 3.12 -> TFLite -> TVM
+  with `CONFIG_KENNING_TVM_MODEL_PRE_GEN`. Renode profiler dump 5.8 GB per run -> `disable_profiler` everywhere.
+  IREE on stm32f746g_disco: RAM overflow, with a smaller heap the UART state is lost (PROTOCOL_STATUS_UNINIT) -> IREE
+  on b_u585i_iot02a. nrf52840dk: boots, but Kenning gets no UART answer (also with the nRF poll workaround) -> boot
+  check only. Kenning hangs after a UART error -> every simulated run has a timeout.
+  kzr's TFLite buffer (64 KB) holds the model and the tensor arena: a 60.5 KB VAE passed a 64 KB AutoML budget and
+  then failed to load ("upload model"); `automl_cats_renode` now budgets 56 KB. Time-limited searches differ run to run.
+  Some candidates use the SELECT op, which TFLite Micro cannot register (no `AddSelect`): `automl_cats_renode` deploys
+  the best returned model that builds.
+- AutoML: optional pixi env `automl` (Kenning extras auto_pytorch + anomaly_detection, torch 2.13.0+cpu from the PyTorch
+  CPU index, autoPyTorch and SMAC pinned by git commit). `kenning automl` with AutoPyTorchML (SMAC + Hyperband, epochs
+  1-5) on CATS nano, CPU, 1.5-3 min; the RAM check (application size + TFLite size <= board RAM) rejected 3 of 10
+  candidates for max32690evkit (128 - 85 KB). The VS Code plugin itself is not used.
+- AutoGluon: optional env `autogluon` (autogluon.tabular 1.6.3, LightGBM, XGBoost, no torch). Same 250 test windows:
+  AutoGluon accuracy 1.0 / F1 1.0 (7.7 MB, host only) vs Kenning AutoML VAE 0.972 / F1 0.53 (15.9 KB, runs on the MCU).
+  TimeSeriesPredictor not added (forecasting, several GB of torch/transformers).
+- Examples (25): kzr_tflite_renode, kzr_tvm_renode, kzr_iree_renode, kzr_nrf52840_boot, automl_cats_search,
+  automl_cats_renode, autogluon_cats_baseline. Templates (18): zephyr_renode now a real run; new zephyr_tvm, zephyr_iree,
+  automl, autogluon. Commands `extra list|install|run`. README: Bend line replaces the BEAM line.
+- Results: doctor 23 ok / 0 warn; examples test 7/7 new (13 min) and 25/25 (automl_cats_renode re-run after the budget fix) all; test_smoke.sh 41/41;
+  test_dry_run.sh 42/42 (shellcheck clean).

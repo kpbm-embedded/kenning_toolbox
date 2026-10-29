@@ -1,16 +1,19 @@
 #!/usr/bin/env bash
 # Smoke test of the installed kenning-box: CLI, Kenning class registry, every runtime's Python
 # package, pyrenode3 driving this ID's Renode, a 5-sample TFLite inference of the cached
-# magic-wand model (offline once ./kenning-box fetch ran), and every template: `new`, `run.sh`
-# (zephyr_renode: checks + dry run, no runtime ELF), result above 80 % accuracy.
-# Usage: tests/test_smoke.sh   (KENNING_SMOKE_TEMPLATES=0 skips the template runs, about 2 min)
+# magic-wand model (offline once ./kenning-box fetch ran), and every template: `new`, `run.sh`, result
+# above 80 % accuracy. zephyr_* templates build kenning-zephyr-runtime with 32_03_zephyr and run in Renode;
+# automl/autogluon need the optional envs (./kenning-box extra install automl autogluon). Those five run one
+# after the other (each build uses up to 8 jobs), the light ones 4 at a time. Temp files go under build/.
+# Usage: tests/test_smoke.sh   (KENNING_SMOKE_TEMPLATES=0 skips the template runs, about 12 min)
 set -uo pipefail
 HERE=$(cd "$(dirname "$0")/.." && pwd -P)
 K="$HERE/kenning-box"
 pass=0; failn=0
 ok()  { printf 'ok    %s\n' "$*"; pass=$((pass+1)); }
 bad() { printf 'FAIL  %s\n' "$*"; failn=$((failn+1)); }
-tmp=$(mktemp -d); trap 'rm -rf "$tmp"' EXIT   # own temp files only
+bdir=$("$K" where | sed -n 's/^build  *//p'); mkdir -p "$bdir"
+tmp=$(mktemp -d "$bdir/smoke.XXXXXX"); trap 'rm -rf "$tmp"' EXIT   # own temp files only (not /tmp: Zephyr builds)
 in_k() { timeout 600 "$K" run bash -c "$1" >"$tmp/out" 2>&1; }
 
 if in_k 'kenning --help' && grep -q 'fine-tune-optimizers' "$tmp/out"; then ok "kenning --help"; else bad "kenning --help"; tail -5 "$tmp/out"; fi
@@ -49,15 +52,18 @@ for k in "${kinds[@]}"; do
 done
 if [ "${KENNING_SMOKE_TEMPLATES:-1}" != 0 ]; then
   run_tpl() { KENNING_BOX="$HERE" timeout 900 "$tmp/tpl/t_$1/run.sh" >"$tmp/run_$1.log" 2>&1; echo $? >"$tmp/rc_$1"; }
-  set -- "${kinds[@]}"
+  heavy=" zephyr_renode zephyr_tvm zephyr_iree automl autogluon "
+  light=(); for k in "${kinds[@]}"; do case $heavy in *" $k "*) ;; *) light+=("$k") ;; esac; done
+  set -- "${light[@]}"
   while [ $# -gt 0 ]; do
     for k in "${@:1:4}"; do run_tpl "$k" & done; wait
     shift $(( $# < 4 ? $# : 4 ))
   done
+  for k in $heavy; do [ -d "$HERE/templates/$k" ] && run_tpl "$k"; done
   for k in "${kinds[@]}"; do
     m="$tmp/tpl/t_$k/build/t_${k}_measurements.json"
     case $k in
-      zephyr_renode) chk() { grep -q 'kenning optimize test --cfg' "$tmp/run_$k.log"; } ;;              # dry run (no runtime ELF)
+      autogluon) chk() { grep -q 'AutoGluon' "$tmp/tpl/t_$k/build/t_$k/compare.md"; } ;;
       optimizer_search) chk() { [ -s "$tmp/tpl/t_$k/build/t_${k}_best.json" ]; } ;;
       microtvm_c) chk() { [ -s "$tmp/tpl/t_$k/build/model/model.o" ]; } ;;
       *) chk() { python3 -I "$HERE/examples/_lib/summarize.py" --min-accuracy 0.8 "$m" >>"$tmp/run_$k.log" 2>&1; } ;;

@@ -16,7 +16,7 @@ env_path = "."
 native = "native/native.zsh"
 native_provides = ["kenning", "kenning-renode"]
 native_off_compat = ["KENNINGBOX_NATIVE_OFF"]
-network = ["bootstrap", "install", "update"]
+network = ["bootstrap", "install", "update", "fetch", "kzr", "extra"]
 
 [scripts.kenning-box]
 schema = 1
@@ -24,8 +24,8 @@ kind = "launcher"
 path = "kenning-box"
 summary = "self-contained Kenning (Antmicro ML deployment/benchmark framework) + own Renode, pinned."
 interpreter = "sh"
-commands = ["help", "where", "bootstrap", "install", "update", "clean", "status", "doctor", "shell", "run", "test", "new", "examples", "native", "relocate", "pack", "fetch", "kenning", "renode", "scenario"]
-flags = ["--all", "--cfg", "--check", "--dir", "--dry-run", "--env", "--force", "--help", "--measurements", "--no-demos", "--out", "--print", "--report", "--with-cache", "--yes"]
+commands = ["help", "where", "bootstrap", "install", "update", "clean", "status", "doctor", "shell", "run", "test", "new", "examples", "native", "relocate", "pack", "fetch", "kenning", "renode", "scenario", "kzr", "extra"]
+flags = ["--all", "--cfg", "--check", "--dir", "--dry-run", "--env", "--force", "--help", "--measurements", "--model", "--no-demos", "--out", "--print", "--report", "--with-cache", "--yes"]
 reads = { global = ["BOXT_DRY_RUN"] }
 dry_run_flag = "--dry-run"
 apply_flag = { clean = "--yes" }

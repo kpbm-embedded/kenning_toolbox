@@ -1,0 +1,40 @@
+# Kenning AutoML on CATS (time-series anomaly detection), as ADI/Antmicro's automl-embedded plugin and
+# kenning-zephyr-runtime's renode-auto-tflite-automl-vae-max32690.yml do it, without VS Code.
+# Rendered by examples/_lib/automl.sh (@...@ placeholders).
+automl:
+  type: AutoPyTorchML            # AutoPyTorch (Antmicro fork): SMAC3 Bayesian optimisation + Hyperband budgets
+  parameters:
+    time_limit: @MIN@            # minutes for the whole search
+    use_models:
+      - PyTorchAnomalyDetectionVAE
+    output_directory: @RES@
+    n_best_models: 3
+    optimize_metric: f1
+    budget_type: epochs          # Hyperband budget: epochs per candidate between min and max
+    min_budget: 1
+    max_budget: 5
+    application_size: @APP_KB@   # KB of RAM the rest of the firmware needs; the model must fit in RAM - this
+    use_cuda: false
+    data_loader_workers: 2
+    max_memory_usage: 8000000    # KB, host RAM cap for the search subprocess
+    seed: 1234
+platform:
+  type: ZephyrPlatform           # only its RAM size (platforms.yml) is used during the search
+  parameters:
+    name: @BOARD@
+    simulated: true
+dataset:
+  type: AnomalyDetectionDataset
+  parameters:
+    dataset_root: @CATS@
+    csv_file: kenning:///datasets/anomaly_detection/cats_nano.csv
+    split_fraction_test: 0.1
+    split_seed: 12345
+    inference_batch_size: 1
+optimizers:
+- type: TFLiteCompiler           # every candidate is converted; its .tflite size is what the RAM check uses
+  parameters:
+    target: default
+    compiled_model_path: @RES@/vae.tflite
+    inference_input_type: float32
+    inference_output_type: float32
