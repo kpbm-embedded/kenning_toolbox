@@ -1,0 +1,24 @@
+{
+    "model_wrapper": {
+        "type": "kenning.modelwrappers.classification.tflite_magic_wand.MagicWandModelWrapper",
+        "parameters": {"model_path": "kenning:///models/classification/magic_wand.h5"}
+    },
+    "dataset": {
+        "type": "kenning.datasets.magic_wand_dataset.MagicWandDataset",
+        "parameters": {"dataset_root": "@DATASET@", "download_dataset": true}
+    },
+    "optimizers": [
+        {
+            "type": "kenning.optimizers.onnx.ONNXCompiler",
+            "parameters": {"compiled_model_path": "@OUT@/magic_wand.onnx"}
+        },
+        {
+            "type": "kenning.optimizers.tvm.TVMCompiler",
+            "parameters": {"target": "llvm", "compiled_model_path": "@OUT@/magic_wand_onnx_tvm.tar", "opt_level": 3}
+        }
+    ],
+    "runtime": {
+        "type": "kenning.runtimes.tvm.TVMRuntime",
+        "parameters": {"save_model_path": "@OUT@/magic_wand_onnx_tvm.tar"}
+    }
+}

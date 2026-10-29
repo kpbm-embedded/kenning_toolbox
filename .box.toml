@@ -1,0 +1,50 @@
+id = "32_07"
+name = "kenning"
+kind = "tool"
+status = "active"
+tags = ["embedded", "ai"]
+
+[backup]
+tier = "critical"
+
+[tool]
+name = "kenning"
+launcher = "kenning-box"
+aliases = ["kenning-box"]
+env_var = "BOX_KENNING"
+env_path = "."
+native = "native/native.zsh"
+native_provides = ["kenning", "kenning-renode"]
+native_off_compat = ["KENNINGBOX_NATIVE_OFF"]
+network = ["bootstrap", "install", "update"]
+
+[scripts.kenning-box]
+schema = 1
+kind = "launcher"
+path = "kenning-box"
+summary = "self-contained Kenning (Antmicro ML deployment/benchmark framework) + own Renode, pinned."
+interpreter = "sh"
+commands = ["help", "where", "bootstrap", "install", "update", "clean", "status", "doctor", "shell", "run", "test", "new", "examples", "native", "relocate", "pack", "fetch", "kenning", "renode", "scenario"]
+flags = ["--all", "--cfg", "--check", "--dir", "--dry-run", "--env", "--force", "--help", "--measurements", "--no-demos", "--out", "--print", "--report", "--with-cache", "--yes"]
+reads = { global = ["BOXT_DRY_RUN"] }
+dry_run_flag = "--dry-run"
+apply_flag = { clean = "--yes" }
+scope = "global"
+
+[scripts."test_dry_run.sh"]
+schema = 1
+kind = "test"
+path = "tests/test_dry_run.sh"
+summary = "Every kenning-box command in --dry-run mode (no downloads, installs, moves or runs)"
+interpreter = "bash"
+depends = { scripts = ["kenning-box"] }
+test = ["tests/test_dry_run.sh"]
+
+[scripts."test_smoke.sh"]
+schema = 1
+kind = "test"
+path = "tests/test_smoke.sh"
+summary = "Smoke test of the installed kenning-box: CLI, Kenning class registry, every runtime's Python package"
+interpreter = "bash"
+depends = { scripts = ["kenning-box"] }
+test = ["tests/test_smoke.sh"]

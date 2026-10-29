@@ -1,0 +1,24 @@
+# kenning-box: only sources go into git. Everything below is downloaded, solved or produced again by
+# ./kenning-box bootstrap | install | fetch | examples test (pins: pixi.toml + pixi.lock, config/pins.tsv,
+# pixi sha256 in kenning-box).
+/.bin/
+/.pixi/
+/cache/
+/install/
+/native/
+/build/
+/log/
+/config/local.env
+*.tar.zst
+# Python bytecode, Kenning/TF/TVM output when run from inside the folder
+__pycache__/
+*.pyc
+*.log
+measurements*.json
+*.tflite
+*.onnx
+*.vmfb
+*.h5
+*.so
+*.o
+/templates/*/build/

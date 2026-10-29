@@ -1,0 +1,28 @@
+{
+    "platform": {
+        "type": "LocalPlatform"
+    },
+    "model_wrapper": {
+        "type": "kenning.modelwrappers.classification.tflite_magic_wand.MagicWandModelWrapper",
+        "parameters": {"model_path": "kenning:///models/classification/magic_wand.h5"}
+    },
+    "dataset": {
+        "type": "kenning.datasets.magic_wand_dataset.MagicWandDataset",
+        "parameters": {"dataset_root": "./build/MagicWandDataset", "download_dataset": true}
+    },
+    "optimizers": [
+        {
+            "type": "kenning.optimizers.tflite.TFLiteCompiler",
+            "parameters": {
+                "target": "int8",
+                "compiled_model_path": "./build/@NAME@.tflite",
+                "inferenceinputtype": "int8",
+                "inferenceoutputtype": "int8"
+            }
+        }
+    ],
+    "runtime": {
+        "type": "kenning.runtimes.tflite.TFLiteRuntime",
+        "parameters": {"save_model_path": "./build/@NAME@.tflite"}
+    }
+}

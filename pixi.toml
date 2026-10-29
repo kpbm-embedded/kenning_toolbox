@@ -1,0 +1,22 @@
+# 32_07_kenning pixi env (managed by ./kenning-box, see README.md). conda-forge python +
+# Kenning v0.8.2 from git (not on PyPI) with its extras resolved by pixi/uv and pinned in
+# pixi.lock. Env in ./.pixi, caches in ./cache.
+# Pinned to main @ ae35386b (2026-10-01, `git describe`: v0.8.2-596), not the v0.8.2 tag: the
+# tag's tvm extra needs apache-tvm==0.14.dev273, which is no longer on PyPI (unresolvable);
+# main ships TVM 0.18 as Antmicro wheels (dl.antmicro.com), TensorFlow >= 2.21, Python <3.14.
+# Renode (for Kenning's Renode/bare-metal runtime) is a pinned portable tarball (config/pins.tsv).
+[workspace]
+name = "kenning_box"
+channels = ["conda-forge"]
+platforms = ["linux-64"]
+
+[dependencies]
+python = "3.12.*"
+pip = "*"
+
+[pypi-dependencies]
+# Kenning main = commit ae35386b15104edeae03972670b4901072d7028c (pyproject version 0.8.2)
+kenning = { git = "https://github.com/antmicro/kenning", rev = "ae35386b15104edeae03972670b4901072d7028c", extras = ["tensorflow", "tflite", "tvm", "onnxruntime", "uart", "renode", "iree"] }
+# `kenning fine-tune-optimizers` always calls compute_detection_metrics, which imports cv2 even for
+# classification (upstream main@ae35386b): headless OpenCV instead of the whole object_detection extra.
+opencv-python-headless = "*"

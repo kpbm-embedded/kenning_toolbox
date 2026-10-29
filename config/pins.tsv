@@ -1,0 +1,6 @@
+# 32_07_kenning pinned downloads (tab separated; columns in lib/boxtool.bash). Checked 2026-10-24.
+# Renode 1.17.0 portable for Kenning's Renode runtime (own copy; same pins as 32_06_renode).
+# name	version	group	platform	kind	digest	url	upstream
+renode	1.17.0	core	linux-x64	tar	sha256:4ba7c68b59e2447f188ef4b4b112fcccd2802582c460beedceb63b84e5605a5f	https://github.com/renode/renode/releases/download/v1.17.0/renode-1.17.0.linux-portable.tar.gz	renode/renode
+renode	1.17.0	core	linux-arm64	tar	sha256:e9051578411441bfb47b77de0381cfba3badce03663367fab561472fd7807f1f	https://github.com/renode/renode/releases/download/v1.17.0/renode-1.17.0.linux-arm64-portable.tar.gz	renode/renode
+renode	1.17.0	core	win-x64	zip	sha256:18bcf145422039e8702c3e5f9864c7787561bfd5deb7a3ee6e168ecf19e2b9db	https://github.com/renode/renode/releases/download/v1.17.0/renode-1.17.0.windows-portable.zip	renode/renode

@@ -1,0 +1,73 @@
+{
+    "optimization_parameters": {
+        "strategy": "grid_search",
+        "optimizable": [
+            "optimizers",
+            "runtime"
+        ],
+        "metric": "inferencetime_mean",
+        "policy": "min"
+    },
+    "model_wrapper": {
+        "type": "kenning.modelwrappers.classification.tflite_magic_wand.MagicWandModelWrapper",
+        "parameters": {
+            "model_path": "kenning:///models/classification/magic_wand.h5"
+        }
+    },
+    "dataset": {
+        "type": "kenning.datasets.magic_wand_dataset.MagicWandDataset",
+        "parameters": {
+            "dataset_root": "./build/MagicWandDataset",
+            "download_dataset": true
+        }
+    },
+    "optimizers": [
+        {
+            "type": "kenning.optimizers.tflite.TFLiteCompiler",
+            "parameters": {
+                "target": [
+                    "default",
+                    "int8"
+                ],
+                "compiled_model_path": [
+                    "./build/@NAME@_search.tflite"
+                ]
+            }
+        },
+        {
+            "type": "kenning.optimizers.tvm.TVMCompiler",
+            "parameters": {
+                "target": [
+                    "llvm"
+                ],
+                "compiled_model_path": [
+                    "./build/@NAME@_search.tar"
+                ],
+                "opt_level": [
+                    3
+                ],
+                "conv2d_data_layout": [
+                    "NHWC"
+                ]
+            }
+        }
+    ],
+    "runtime": [
+        {
+            "type": "kenning.runtimes.tvm.TVMRuntime",
+            "parameters": {
+                "save_model_path": [
+                    "./build/@NAME@_search.tar"
+                ]
+            }
+        },
+        {
+            "type": "kenning.runtimes.tflite.TFLiteRuntime",
+            "parameters": {
+                "save_model_path": [
+                    "./build/@NAME@_search.tflite"
+                ]
+            }
+        }
+    ]
+}

@@ -1,0 +1,20 @@
+{
+    "model_wrapper": {
+        "type": "kenning.modelwrappers.classification.tflite_magic_wand.MagicWandModelWrapper",
+        "parameters": {"model_path": "kenning:///models/classification/magic_wand.h5"}
+    },
+    "dataset": {
+        "type": "kenning.datasets.magic_wand_dataset.MagicWandDataset",
+        "parameters": {"dataset_root": "@DATASET@", "download_dataset": true}
+    },
+    "optimizers": [
+        {
+            "type": "kenning.optimizers.tflite.TFLiteCompiler",
+            "parameters": {"target": "@TARGET@", "compiled_model_path": "@OUT@/magic_wand_@TARGET@.tflite"}
+        }
+    ],
+    "runtime": {
+        "type": "kenning.runtimes.tflite.TFLiteRuntime",
+        "parameters": {"save_model_path": "@OUT@/magic_wand_@TARGET@.tflite"}
+    }
+}

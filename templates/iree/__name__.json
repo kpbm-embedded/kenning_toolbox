@@ -1,0 +1,34 @@
+{
+    "platform": {
+        "type": "LocalPlatform"
+    },
+    "model_wrapper": {
+        "type": "kenning.modelwrappers.classification.tflite_magic_wand.MagicWandModelWrapper",
+        "parameters": {
+            "model_path": "kenning:///models/classification/magic_wand.h5"
+        }
+    },
+    "dataset": {
+        "type": "kenning.datasets.magic_wand_dataset.MagicWandDataset",
+        "parameters": {
+            "dataset_root": "./build/MagicWandDataset",
+            "download_dataset": true
+        }
+    },
+    "optimizers": [
+        {
+            "type": "kenning.optimizers.iree.IREECompiler",
+            "parameters": {
+                "backend": "llvm-cpu",
+                "compiled_model_path": "./build/@NAME@.vmfb"
+            }
+        }
+    ],
+    "runtime": {
+        "type": "kenning.runtimes.iree.IREERuntime",
+        "parameters": {
+            "save_model_path": "./build/@NAME@.vmfb",
+            "driver": "local-task"
+        }
+    }
+}
