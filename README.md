@@ -31,7 +31,7 @@ smoke 41/41; dry run 42/42 (2026-10-29). Launcher: `./kenning-box`.
 | kenning-zephyr-runtime | main @ 8c884814 (2026-09-30) | `kzr setup` into `install/kzr`, commit-checked (`config/kzr.tsv`) |
 | kzr modules | tflite-micro zephyr-v4.4.0 @ fcc760af, TVM v0.18.0 @ 22a9d388, dlpack @ 94485e23, IREE v3.11.0 @ e4a3b040 (+ flatcc, printf) | same; TVM gets kzr's two CRT patches |
 | Zephyr (not here) | v4.4.2 + Zephyr SDK 1.0.1 of `32_03_zephyr` | `BOX_ZEPHYR` or the sibling folder, read-only; exit 3 without it |
-| AutoML env `automl` (optional) | Kenning extras `auto_pytorch` + `anomaly_detection`: torch 2.13.0+cpu, torchvision 0.28.0+cpu, autoPyTorch 0.2.1 (antmicro/auto-pytorch @ 1fbf8753), SMAC 1.4.0 (antmicro/smac3 1.4.0-numpy-2 @ 12afbffc) | `./kenning-box extra install automl` (5.4 GB, CPU only) |
+| AutoML env `automl` (optional) | Kenning extras `auto_pytorch` + `anomaly_detection`: torch 2.13.0+cpu, torchvision 0.28.0+cpu, autoPyTorch 0.2.1 (antmicro/auto-pytorch @ 1fbf8753), SMAC 1.4.0 (antmicro/smac3 1.4.0-numpy-2 @ 12afbffc), commits pinned in `pixi.lock` | `./kenning-box extra install automl` (5.4 GB, CPU only) |
 | AutoGluon env `autogluon` (optional) | autogluon.tabular 1.6.3 with LightGBM 4.7.0, XGBoost 3.3.0 (CPU), Python 3.12 | `./kenning-box extra install autogluon` (0.7 GB, no torch) |
 
 Also installed: extra `uart`, `opencv-python-headless` and `jinja2` (kzr's TFLite op-resolver generator). Not installed:

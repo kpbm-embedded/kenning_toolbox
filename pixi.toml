@@ -32,8 +32,10 @@ jinja2 = "*"
 kenning = { git = "https://github.com/antmicro/kenning", rev = "ae35386b15104edeae03972670b4901072d7028c", extras = ["tensorflow", "tflite", "tvm", "onnxruntime", "uart", "renode", "iree", "auto_pytorch", "anomaly_detection"] }
 torch = { version = "==2.13.0", index = "https://download.pytorch.org/whl/cpu" }
 torchvision = { version = "==0.28.0", index = "https://download.pytorch.org/whl/cpu" }
-autoPyTorch = { git = "https://github.com/antmicro/auto-pytorch.git", rev = "1fbf8753015416c650694069faaf3043a9428fda" }
-smac = { git = "https://github.com/antmicro/smac3.git", rev = "12afbffc51580ca7cb53297d955c5c02c1a3d985" }
+# autoPyTorch and smac come from Kenning's auto_pytorch extra (git antmicro/auto-pytorch, antmicro/smac3 @ branch
+# 1.4.0-numpy-2); pixi.lock pins them to commits 1fbf8753015416c650694069faaf3043a9428fda and
+# 12afbffc51580ca7cb53297d955c5c02c1a3d985. Not listed here: a second spec for the same git URL (rev or branch)
+# conflicts with Kenning's (uv: "conflicting URLs") or makes `pixi install --locked` call the lock outdated.
 
 # autogluon: host-side AutoML baseline (AutoGluon TabularPredictor, CPU-only, no torch models).
 # AutoGluon models cannot be exported to TFLite/microTVM: never deployable to an MCU.

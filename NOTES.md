@@ -70,7 +70,8 @@
   Some candidates use the SELECT op, which TFLite Micro cannot register (no `AddSelect`): `automl_cats_renode` deploys
   the best returned model that builds.
 - AutoML: optional pixi env `automl` (Kenning extras auto_pytorch + anomaly_detection, torch 2.13.0+cpu from the PyTorch
-  CPU index, autoPyTorch and SMAC pinned by git commit). `kenning automl` with AutoPyTorchML (SMAC + Hyperband, epochs
+  CPU index; autoPyTorch and SMAC git commits pinned in pixi.lock: an own rev/branch spec next to Kenning's makes
+  `pixi install --locked` fail, found by the fresh-clone check). `kenning automl` with AutoPyTorchML (SMAC + Hyperband, epochs
   1-5) on CATS nano, CPU, 1.5-3 min; the RAM check (application size + TFLite size <= board RAM) rejected 3 of 10
   candidates for max32690evkit (128 - 85 KB). The VS Code plugin itself is not used.
 - AutoGluon: optional env `autogluon` (autogluon.tabular 1.6.3, LightGBM, XGBoost, no torch). Same 250 test windows:

@@ -114,13 +114,13 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/tzdata-2026e-h5d301ff_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/wheel-0.48.0-pyhd8ed1ab_0.conda
       - pypi: direct+https://dl.antmicro.com/kenning/packages/tvm/tvm-0.18.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl
-      - pypi: git+https://github.com/antmicro/auto-pytorch.git?rev=1fbf8753015416c650694069faaf3043a9428fda#1fbf8753015416c650694069faaf3043a9428fda
+      - pypi: git+https://github.com/antmicro/auto-pytorch.git#1fbf8753015416c650694069faaf3043a9428fda
       - pypi: git+https://github.com/antmicro/dts2repl?rev=main#c94a6ad281f696f501064cfa2aad94a7410d6086
       - pypi: git+https://github.com/antmicro/kenning?rev=ae35386b15104edeae03972670b4901072d7028c#ae35386b15104edeae03972670b4901072d7028c
       - pypi: git+https://github.com/antmicro/pyrenode3.git#27362def38ce409b95c972ce494cd8517dac17a4
       - pypi: git+https://github.com/antmicro/random-forest-run.git?rev=sdist#502afa7d3e0c7591df1cd9ef028a3971177491a0
       - pypi: git+https://github.com/antmicro/renode-run.git#c393744077cf7a0d29a4f1f3a6c7d66ec64fd6ee
-      - pypi: git+https://github.com/antmicro/smac3.git?rev=12afbffc51580ca7cb53297d955c5c02c1a3d985#12afbffc51580ca7cb53297d955c5c02c1a3d985
+      - pypi: git+https://github.com/antmicro/smac3.git?rev=1.4.0-numpy-2#12afbffc51580ca7cb53297d955c5c02c1a3d985
       - pypi: https://download-r2.pytorch.org/whl/cpu/torch-2.13.0%2Bcpu-cp312-cp312-manylinux_2_28_x86_64.whl
       - pypi: https://download-r2.pytorch.org/whl/cpu/torchvision-0.28.0%2Bcpu-cp312-cp312-manylinux_2_28_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/02/be/5d2d47b1fb58943194fb59dcf222f7c4e35122ec0ffe8c36e18b5d728f0b/tblib-3.2.2-py3-none-any.whl
@@ -1044,7 +1044,7 @@ packages:
   - tornado ; extra == 'all-prod'
   - typing-extensions ; extra == 'all-prod'
   - xgboost>=1.1.0 ; extra == 'all-prod'
-- pypi: git+https://github.com/antmicro/auto-pytorch.git?rev=1fbf8753015416c650694069faaf3043a9428fda#1fbf8753015416c650694069faaf3043a9428fda
+- pypi: git+https://github.com/antmicro/auto-pytorch.git#1fbf8753015416c650694069faaf3043a9428fda
   name: autopytorch
   version: 0.2.1
   requires_dist:
@@ -1291,7 +1291,7 @@ packages:
   - typer==0.15.*
   - rich==14.1.*
   - ruff>=0.4.0 ; extra == 'dev'
-- pypi: git+https://github.com/antmicro/smac3.git?rev=12afbffc51580ca7cb53297d955c5c02c1a3d985#12afbffc51580ca7cb53297d955c5c02c1a3d985
+- pypi: git+https://github.com/antmicro/smac3.git?rev=1.4.0-numpy-2#12afbffc51580ca7cb53297d955c5c02c1a3d985
   name: smac
   version: 1.4.0
   requires_dist:
